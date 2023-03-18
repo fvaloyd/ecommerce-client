@@ -1,0 +1,127 @@
+﻿@page "/"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="row">
+    <div class="col">
+
+        <div class="row">
+            <div class="col">
+                <h1 class="title">My Store</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <form method="post" class="mb-3">
+                    <div class="input-group">
+                        <input class="mb-1 form-control" placeholder="Product name" asp-for="productToSearch" />
+                        <button type="button" class="rounded mb-1 text-white search-btn">
+                            Search
+                            <img src="assets/search.svg" width="20px" height="20px" />
+                        </button>
+                    </div>
+                    <select class="form-select mb-1">
+                        <option selected>All</option>
+                        @foreach(var category in Model.storeProducts.Items.Select(x => x.CategoryName))
+                        {
+                        <option>@category</option>
+                        }
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var product in Model.storeProducts.Items)
+            {
+            <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+                <div class="productCard">
+                    <div class="productCard-img-container">
+                        <img class="col-10" src="@product.ImageUrl" alt="@product.Name image">
+                    </div>
+
+                    <div>
+                        <h5 class="text-white">@product.Name</h5>
+                        <div class="productCard-info">
+                            <span class="category-badget">@product.BrandName</span>
+                            <span class="brand-badget">@product.CategoryName</span>
+                            <span class="text-white py-1">@product.Price $</span>
+                        </div>
+                        <button class="addToCart-btn">
+                            Add to cart
+                            <img src="assets/add.svg" class="addToCart-svg" alt="add to cart icon" width="20px"
+                                height="20px">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <nav>
+                    <ul class="prdPagination-list" id="pagination">
+                        <li>
+                            <a href="#" id="previous">
+                                <img class="prdPagination-svg" src="/assets/leftArrow.svg" width="40px" height="40px" />
+                            </a>
+                        </li>
+                        @for(int i=1; i<=Model.storeProducts.TotalPages; i++)
+                        {
+                            <li class="prdPagination-item"><a asp-page-handler="NextPage" asp-route-pageNumber="@i">@i</a>
+                            </li>
+                        }
+                        <li>
+                            <a href="#" id="next">
+                                <img src="/assets/rightArrow.svg" width="40px" height="40px" />
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        const DEFAULT_PAGE = 1;
+        const TOTAL_PAGES = parseInt("@Model.storeProducts.TotalPages.ToString()");
+
+        const pageNumber = parseInt("@Model.storeProducts.PageNumber");
+
+        const paginationList = document.getElementById('pagination');
+        const paginationLinks = paginationList.getElementsByTagName('a');
+
+        const previous = document.getElementById('previous');
+        const next = document.getElementById('next');
+
+        if (pageNumber == DEFAULT_PAGE) {
+            previous.ariaDisabled = true;
+        }
+
+        if (pageNumber == TOTAL_PAGES) {
+            next.ariaDisabled = true;
+        }
+
+        next.addEventListener('click', (e) => {
+            next.setAttribute('href', `/?pageNumber=${pageNumber + 1}&handler=NextPage`);
+        })
+
+        previous.addEventListener('click', (e) => {
+            previous.setAttribute('href', `/?pageNumber=${pageNumber - 1}&handler=NextPage`);
+        })
+
+        for (let i = 1; i < (paginationLinks.length - 1); i++) {
+            if (paginationLinks[i].innerHTML == pageNumber) {
+                paginationLinks[i].ariaDisabled = true;
+                paginationLinks[i].parentElement.classList.add('selected');
+            }
+        }
+    </script>
+}

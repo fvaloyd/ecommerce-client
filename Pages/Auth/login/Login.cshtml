@@ -1,0 +1,27 @@
+﻿@page "/Auth/Login"
+@model Ecommerce.Client.Pages.Auth.LoginModel
+@{
+}
+
+<div class="row">
+    <div class="col-sm-4">
+        <h1 class="mb-5">Login</h1>
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label" asp-for="loginRequest.Email"></label>
+                <input class="form-control" required asp-for="loginRequest.Email" />
+                <span class="text-danger" asp-validation-for="loginRequest.Email"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" asp-for="loginRequest.Password"></label>
+                <input class="form-control" type="password" required asp-for="loginRequest.Password" />
+                <span class="text-danger" asp-validation-for="loginRequest.Password"></span>
+            </div>
+            <button class="btn btn-primary" type="submit">Send</button>
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

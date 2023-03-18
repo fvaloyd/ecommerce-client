@@ -1,0 +1,47 @@
+:root {
+    --clr-primary-800: #193650;
+    --clr-primary-900: #162f45;
+    --clr-sky-400: #38bdf8;
+    --clr-pink-400: #f472b6;
+    --clr-stone-700: #686868;
+    --clr-emerald-400: #34d399;
+    --clr-emerald-600: #059669;
+    --clr-emerald-700: #047857;
+    --clr-slate-50: #f8fafc;
+
+    --f-color: #28282e;
+
+    --br-rounded: .3rem;
+}
+
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-size: 100%;
+    font-family: 'Roboto';
+}
+
+button {
+    outline: none;
+    border: none;
+}
+
+a {
+    text-decoration: none;
+    color: var(--f-color);
+}
+
+a:hover {
+    color: var(--f-color)
+}
+
+a[aria-disabled='true'], a[aria-disabled='true']:hover {
+    cursor: default;
+    pointer-events: none;
+}
