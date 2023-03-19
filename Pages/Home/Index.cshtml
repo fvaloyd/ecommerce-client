@@ -17,17 +17,17 @@
             <div class="col">
                 <form method="post" class="mb-3">
                     <div class="input-group">
-                        <input class="mb-1 form-control" placeholder="Product name" asp-for="productToSearch" />
-                        <button type="button" class="rounded mb-1 text-white search-btn">
+                        <input class="mb-1 form-control" placeholder="Product name" asp-for="nameFilter" />
+                        <button type="submit" class="rounded mb-1 text-white search-btn">
                             Search
                             <img src="assets/search.svg" width="20px" height="20px" />
                         </button>
                     </div>
-                    <select class="form-select mb-1">
-                        <option selected>All</option>
+                    <select class="form-select mb-1" asp-for="categoryFilter">
+                        <option value="" selected>All</option>
                         @foreach(var category in Model.storeProducts.Items.Select(x => x.CategoryName))
                         {
-                        <option>@category</option>
+                            <option value="@category">@category</option>
                         }
                     </select>
                 </form>
