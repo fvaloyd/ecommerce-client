@@ -1,19 +1,27 @@
-﻿<nav>
-    @*<div class="container">
-        <a class="navbar-brand" asp-area="" asp-page="/Index">Ecommerce.Client</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+﻿<nav id="navbar-container">
+    <div>
+        <button id="navbar-toggle" type="button" data-toggle="collapse">
+            <img id="navbar-toggle-icon" src="/assets/hamburger.svg" width="30px" height="30px" />
         </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+        <div id="navbar-collapse" class="hidden">
+            <ul id="navbar">
+                <li>
+                    <img src="/assets/store.svg" alt="store icon" width="30px" height="30px" />
+                    <a href="/">Store</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                <li>
+                    <img src="/assets/admin.svg" alt="admin icon" width="30px" height="30px" />
+                    <a href="/NotFound">Admin</a>
+                </li>
+                <li>
+                    <img src="/assets/cart.svg" alt="cart icon" width="30px" height="30px" />
+                    <a href="/NotFound">Cart</a>
+                </li>
+                <li>
+                    <img src="/assets/user.svg" alt="user icon" width="30px" height="30px" />
+                    <a>User</a>
                 </li>
             </ul>
         </div>
-    </div>*@
+    </div>
 </nav>

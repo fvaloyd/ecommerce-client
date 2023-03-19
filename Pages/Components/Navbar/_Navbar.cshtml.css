@@ -1,1 +1,81 @@
-﻿
+﻿#navbar-container {
+    display: flex;
+    position: fixed;
+    min-height: 100%;
+    right: 0;
+    z-index: 10;
+}
+
+#navbar {
+    z-index: 11;
+    width: 15rem;
+    height: 100vh;
+    position: fixed;
+    display: flex;
+    right: -100%;
+    top: 0;
+    border-radius: .5rem 0 0 .5rem;
+    flex-direction: column;
+    background-color: var(--clr-primary-800);
+    animation: show 0.4s forwards;
+}
+@keyframes show {
+    from {
+      right: -100%;
+      opacity: 0;
+    }
+    to {
+      right: 0;
+      opacity: 1;
+    }
+}
+
+#navbar li:first-child {
+    margin-top: 3rem;
+}
+
+#navbar li:last-child {
+    position: absolute;
+    bottom: 0;
+}
+
+#navbar li {
+    display: flex;
+    align-items: center;
+    width: 7rem;
+    list-style: none;
+    margin: 0 0 1rem 0;
+}
+
+#navbar li a {
+    font-size: 1.5rem;
+    color: var(--clr-slate-50);
+    margin-left: .2rem;
+    transition: all .3s;
+}
+
+#navbar li a:hover {
+    color: var(--clr-slate-300);
+}
+
+#navbar-toggle {
+    position: relative;
+    z-index: 100;
+    margin: 1rem 1rem 0 0;
+    background-color: transparent;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (max-width: 30rem) {
+    #navbar {
+        width: 100%;
+        border-radius: 0;
+        align-items: center;
+    }
+    #navbar li:last-child {
+        position: static;
+    }
+}
