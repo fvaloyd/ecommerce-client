@@ -16,7 +16,8 @@
 </head>
 <body>
     <header>
-        <partial name="/Pages/Components/Navbar/_Navbar.cshtml" />
+        @* <partial name="/Pages/Components/Navbar/_Navbar.cshtml" /> *@
+        @await Html.PartialAsync("/Pages/Components/Navbar/_Navbar.cshtml")
     </header>
 
     <main role="main" class="p-5">
@@ -29,6 +30,22 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("scripts", required: false)
 </body>
+<script>
+    const navbarToggle = document.getElementById('navbar-toggle');
+    const navbarToggleIcon = document.getElementById('navbar-toggle-icon');
+    const navbarCollapse = document.getElementById('navbar-collapse');
+
+    navbarToggle.addEventListener('click', () => {
+        if (navbarToggleIcon.src.includes('hamburger'))
+        {
+            navbarToggleIcon.src = "/assets/close.svg"
+            
+        } else {
+            navbarToggleIcon.src = "/assets/hamburger.svg"
+        }
+        navbarCollapse.classList.toggle('hidden');
+    });
+</script>
 </html>
