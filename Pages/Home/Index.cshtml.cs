@@ -13,14 +13,15 @@ public class IndexModel : PageModel
     const int PAGE_SIZE    = 2;
     const int DEFAULT_PAGE = 1;
     private readonly HttpClient client;
-
-    [BindProperty]
-    public string nameFilter     { get; set; } = string.Empty;
-    [BindProperty]
-    public string categoryFilter { get; set; } = string.Empty;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public PaginatedList<ProductResponse> storeProducts { get; set; } = null!;
+    [BindProperty]
+    public string nameFilter { get; set; } = string.Empty;
+
+    [BindProperty]
+    public string categoryFilter { get; set; } = string.Empty;
+
+    public PaginatedList<ProductResponse> products { get; set; } = null!;
 
     public IndexModel(IHttpClientFactory httpClientFactory)
     {
@@ -30,32 +31,44 @@ public class IndexModel : PageModel
 
     public async Task OnGet()
     {
-        // var client = _httpClientFactory.CreateClient(BackendClientConsts.CLIENT_NAME);
-        
-        var query = GetQueryForPaginatedProductsRequest(DEFAULT_PAGE.ToString(), PAGE_SIZE.ToString(), nameFilter, categoryFilter);
+        var queryString = GetQueryStringForPaginatedProductsRequest(
+            DEFAULT_PAGE.ToString(),
+            PAGE_SIZE.ToString(),
+            nameFilter,
+            categoryFilter);
 
-        storeProducts = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(StoreEndpoints.GetStoreWithProductPaginated, query: query);
+        products = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(
+            StoreEndpoints.GetStoreWithProductPaginated,
+            queryString: queryString);
     }
 
     public async Task OnPostAsync()
     {
-        // var client = _httpClientFactory.CreateClient(BackendClientConsts.CLIENT_NAME);
-        
-        var query = GetQueryForPaginatedProductsRequest(DEFAULT_PAGE.ToString(), PAGE_SIZE.ToString(), nameFilter, categoryFilter);
+        var queryString = GetQueryStringForPaginatedProductsRequest(
+            DEFAULT_PAGE.ToString(),
+            PAGE_SIZE.ToString(),
+            nameFilter,
+            categoryFilter);
 
-        storeProducts = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(StoreEndpoints.GetStoreWithProductPaginated, query: query);
+        products = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(
+            StoreEndpoints.GetStoreWithProductPaginated,
+            queryString: queryString);
     }
 
-    public async Task OnGetNextPageAsync(int pageNumber)
+    public async Task OnGetChangePageAsync(int pageNumber)
     {
-        // var client = _httpClientFactory.CreateClient(BackendClientConsts.CLIENT_NAME);
+        var queryString = GetQueryStringForPaginatedProductsRequest(
+            pageNumber.ToString(),
+            PAGE_SIZE.ToString(),
+            nameFilter,
+            categoryFilter);
 
-        var query = GetQueryForPaginatedProductsRequest(pageNumber.ToString(), PAGE_SIZE.ToString(), nameFilter, categoryFilter);
-
-        storeProducts = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(StoreEndpoints.GetStoreWithProductPaginated, query: query);
+        products = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(
+            StoreEndpoints.GetStoreWithProductPaginated,
+            queryString: queryString);
     }
 
-    private Dictionary<string, string> GetQueryForPaginatedProductsRequest(
+    private Dictionary<string, string> GetQueryStringForPaginatedProductsRequest(
         string PageNumber,
         string PageSize,
         string nameFilter,

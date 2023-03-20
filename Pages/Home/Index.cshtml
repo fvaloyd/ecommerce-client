@@ -25,7 +25,7 @@
                     </div>
                     <select class="form-select mb-1" asp-for="categoryFilter">
                         <option value="" selected>All</option>
-                        @foreach(var category in Model.storeProducts.Items.Select(x => x.CategoryName))
+                        @foreach(var category in Model.products.Items.Select(x => x.CategoryName))
                         {
                             <option value="@category">@category</option>
                         }
@@ -35,7 +35,7 @@
         </div>
 
         <div class="row">
-            @foreach (var product in Model.storeProducts.Items)
+            @foreach (var product in Model.products.Items)
             {
             <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
                 <div class="productCard">
@@ -70,9 +70,9 @@
                                 <img class="prdPagination-svg" src="/assets/leftArrow.svg" width="40px" height="40px" />
                             </a>
                         </li>
-                        @for(int i=1; i<=Model.storeProducts.TotalPages; i++)
+                        @for(int i=1; i<=Model.products.TotalPages; i++)
                         {
-                            <li class="prdPagination-item"><a asp-page-handler="NextPage" asp-route-pageNumber="@i">@i</a>
+                            <li class="prdPagination-item"><a asp-page-handler="ChangePage" asp-route-pageNumber="@i">@i</a>
                             </li>
                         }
                         <li>
@@ -91,9 +91,9 @@
 @section scripts {
     <script>
         const DEFAULT_PAGE = 1;
-        const TOTAL_PAGES = parseInt("@Model.storeProducts.TotalPages.ToString()");
+        const TOTAL_PAGES = parseInt("@Model.products.TotalPages.ToString()");
 
-        const pageNumber = parseInt("@Model.storeProducts.PageNumber");
+        const pageNumber = parseInt("@Model.products.PageNumber");
 
         const paginationList = document.getElementById('pagination');
         const paginationLinks = paginationList.getElementsByTagName('a');
@@ -110,11 +110,11 @@
         }
 
         next.addEventListener('click', (e) => {
-            next.setAttribute('href', `/?pageNumber=${pageNumber + 1}&handler=NextPage`);
+            next.setAttribute('href', `/?pageNumber=${pageNumber + 1}&handler=ChangePage`);
         })
 
         previous.addEventListener('click', (e) => {
-            previous.setAttribute('href', `/?pageNumber=${pageNumber - 1}&handler=NextPage`);
+            previous.setAttribute('href', `/?pageNumber=${pageNumber - 1}&handler=ChangePage`);
         })
 
         for (let i = 1; i < (paginationLinks.length - 1); i++) {

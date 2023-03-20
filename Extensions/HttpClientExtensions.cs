@@ -12,7 +12,7 @@ public static class HttpClientExtensions
         return JsonConvert.DeserializeObject<T>(content)!;
     }
 
-    public static async Task<T> GetAsyncWrapper<T>(this HttpClient client, string url, string? routeValue = null, Dictionary<string, string>? query = null)
+    public static async Task<T> GetAsyncWrapper<T>(this HttpClient client, string url, string? routeValue = null, Dictionary<string, string>? queryString = null)
     {
         
         StringBuilder stringBuilder = new StringBuilder(url);
@@ -22,9 +22,9 @@ public static class HttpClientExtensions
             stringBuilder.Append(routeValue);
         }
 
-        if (query is not null && query.Count > 0)
+        if (queryString is not null && queryString.Count > 0)
         {
-            stringBuilder.Append(query.ToQueryString());
+            stringBuilder.Append(queryString.ToQueryString());
         }
 
         HttpResponseMessage response = await client.GetAsync(stringBuilder.ToString());
