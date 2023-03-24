@@ -1,10 +1,14 @@
+using Ecommerce.Contracts.Endpoints;
 using Ecommerce.Client.BackendClient;
 using Ecommerce.Contracts.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.IdentityModel.Tokens.Jwt;
+
+using Newtonsoft.Json;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Ecommerce.Client.Pages.Auth;
 
@@ -24,21 +28,29 @@ public class LoginModel : PageModel
     {
     }
 
-    public IActionResult OnPostAsync()
+    public async Task<IActionResult> OnPostAsync()
     {
         var client = _httpClientFactory.CreateClient(BackendClientConsts.CLIENT_NAME);
 
-        
-        // var authResponse = await _backendHttpClient.LoginAsync(loginRequest);
+        var response = await client.PostAsJsonAsync<LoginRequest>(AuthEndpoints.Login, loginRequest);
 
-        // var claimsPrincipal = GetClaimsPrincipal(authResponse.AccessToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            return Page();
+        }
 
-        // Response.Cookies.Append("access-token", authResponse.AccessToken);
-        // Response.Cookies.Append("refresh-token", authResponse.RefreshToken);
+        var responseReaded = await response.Content.ReadAsStringAsync();
 
-        // await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+        var authResponse = JsonConvert.DeserializeObject<AuthenticateResponse>(responseReaded);
 
-        return RedirectToPage("/Index");
+        var claimsPrincipal = GetClaimsPrincipal(authResponse!.AccessToken);
+
+        Response.Cookies.Append("access-token", authResponse.AccessToken);
+        Response.Cookies.Append("refresh-token", authResponse.RefreshToken);
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+         return RedirectToPage("/Home/Index");
     }
 
     private ClaimsPrincipal GetClaimsPrincipal(string token)
