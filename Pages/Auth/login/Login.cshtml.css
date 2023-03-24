@@ -1,1 +1,18 @@
-﻿
+﻿#login-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+}
+
+
+#login-form-container button {
+    color: var(--clr-slate-50);
+    background-color: var(--clr-primary-800);
+    transition: all .2s;
+}
+
+#login-form-container button:hover {
+    background-color: var(--clr-primary-900);
+}
