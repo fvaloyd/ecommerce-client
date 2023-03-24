@@ -1,4 +1,8 @@
 ﻿footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
     background-color: var(--clr-primary-800);
     color: var(--clr-slate-50);
 }
