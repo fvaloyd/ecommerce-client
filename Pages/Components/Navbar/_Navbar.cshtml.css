@@ -34,7 +34,7 @@
     margin-top: 3rem;
 }
 
-#navbar li:last-child {
+#navbar div:last-child {
     position: absolute;
     bottom: 0;
 }
