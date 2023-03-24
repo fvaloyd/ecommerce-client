@@ -25,7 +25,7 @@
                     </div>
                     <select class="form-select mb-1" asp-for="categoryFilter">
                         <option value="" selected>All</option>
-                        @foreach(var category in Model.products.Items.Select(x => x.CategoryName))
+                        @foreach(string category in Model.categories)
                         {
                             <option value="@category">@category</option>
                         }
