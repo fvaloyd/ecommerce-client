@@ -6,10 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(config => {
     config.Filters.Add(typeof(BackendExceptionFilter));
 });
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddCookieAuthentication()
                 .AddAuthorization()
+                .AddRefitConfiguration(builder.Configuration)
                 .AddBackendHttpClient(builder.Configuration);
 
 var app = builder.Build();

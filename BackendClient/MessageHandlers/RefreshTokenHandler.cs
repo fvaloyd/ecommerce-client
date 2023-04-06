@@ -1,4 +1,5 @@
-﻿using Ecommerce.Contracts.Authentication;
+﻿using Ecommerce.Contracts.Requests;
+using Ecommerce.Contracts.Responses;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json;
 using System.Net;

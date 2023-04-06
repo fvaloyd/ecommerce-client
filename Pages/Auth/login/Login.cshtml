@@ -8,14 +8,14 @@
         <h1 class="mb-5">Login</h1>
         <form method="post" class="col-12 col-md-8 col-lg-6 col-xxl-4">
             <div class="mb-3">
-                <label class="form-label" asp-for="loginRequest.Email"></label>
-                <input class="form-control" required asp-for="loginRequest.Email" />
-                <span class="text-danger" asp-validation-for="loginRequest.Email"></span>
+                <label class="form-label" asp-for="LoginRequest.Email"></label>
+                <input class="form-control" required asp-for="LoginRequest.Email" />
+                <span class="text-danger" asp-validation-for="LoginRequest.Email"></span>
             </div>
             <div class="mb-3">
-                <label class="form-label" asp-for="loginRequest.Password"></label>
-                <input class="form-control" type="password" required asp-for="loginRequest.Password" />
-                <span class="text-danger" asp-validation-for="loginRequest.Password"></span>
+                <label class="form-label" asp-for="LoginRequest.Password"></label>
+                <input class="form-control" type="password" required asp-for="LoginRequest.Password" />
+                <span class="text-danger" asp-validation-for="LoginRequest.Password"></span>
             </div>
             <button class="btn form-control" type="submit">Send</button>
         </form>

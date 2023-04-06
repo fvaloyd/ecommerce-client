@@ -1,9 +1,7 @@
-﻿using Ecommerce.Client.BackendClient;
-using Ecommerce.Client.Extensions;
-using Ecommerce.Client.Models;
-using Ecommerce.Contracts.Categories;
-using Ecommerce.Contracts.Endpoints;
-using Ecommerce.Contracts.Products;
+﻿using Ecommerce.Client.Models;
+using Ecommerce.Client.Pages.Services;
+using Ecommerce.Contracts.Responses;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,106 +10,70 @@ namespace Ecommerce.Client.Pages;
 
 public class IndexModel : PageModel
 {
-    const string CACHE_CATEGORIES_KEY = "categories";
-    const int PAGE_SIZE    = 2;
+    const string CACHE_CATEGORIES_KEY = "Categories";
+    const int PAGE_SIZE    = 6;
     const int DEFAULT_PAGE = 1;
-    private readonly HttpClient client;
-    private readonly IHttpClientFactory _httpClientFactory;
+
     private readonly IMemoryCache _cache;
+    private readonly IEcommerceApi _ecommerceApi;
 
     [BindProperty]
-    public string nameFilter { get; set; } = string.Empty;
+    public string NameFilter { get; set; } = string.Empty;
 
     [BindProperty]
-    public string categoryFilter { get; set; } = string.Empty;
+    public string CategoryFilter { get; set; } = string.Empty;
 
-    public PaginatedList<ProductResponse> products { get; set; } = null!;
+    public PaginatedList<ProductResponse> Products { get; set; } = null!;
 
-    public string[] categories {get;set;} = null!;
+    public string[] Categories { get; set; } = null!;
 
-    public IndexModel(
-        IHttpClientFactory httpClientFactory,
-        IMemoryCache cache)
+    public IndexModel(IMemoryCache cache, IEcommerceApi ecommerceApi) 
     {
-        _httpClientFactory = httpClientFactory;
-        client = httpClientFactory.CreateClient(BackendClientConsts.CLIENT_NAME);
         _cache = cache;
+        _ecommerceApi = ecommerceApi;
     }
 
     public async Task OnGet()
     {
-        var queryString = GetQueryStringForPaginatedProductsRequest(
-            DEFAULT_PAGE.ToString(),
-            PAGE_SIZE.ToString(),
-            nameFilter,
-            categoryFilter);
+        Products = await _ecommerceApi.GetAllProductsOnStore(DEFAULT_PAGE, PAGE_SIZE, NameFilter, CategoryFilter);
 
-        products = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(
-            StoreEndpoints.GetStoreWithProductPaginated,
-            queryString: queryString);
-
-        categories = await GetCacheCategory();
+        Categories = await GetCacheCategory(OnCacheMiss);
     }
 
     public async Task OnPostAsync()
     {
-        var queryString = GetQueryStringForPaginatedProductsRequest(
-            DEFAULT_PAGE.ToString(),
-            PAGE_SIZE.ToString(),
-            nameFilter,
-            categoryFilter);
+        Products = await _ecommerceApi.GetAllProductsOnStore(DEFAULT_PAGE, PAGE_SIZE, NameFilter, CategoryFilter);
 
-        products = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(
-            StoreEndpoints.GetStoreWithProductPaginated,
-            queryString: queryString);
-
-        categories = await GetCacheCategory();
+        Categories = await GetCacheCategory(OnCacheMiss);
     }
 
     public async Task OnGetChangePageAsync(int pageNumber)
     {
-        var queryString = GetQueryStringForPaginatedProductsRequest(
-            pageNumber.ToString(),
-            PAGE_SIZE.ToString(),
-            nameFilter,
-            categoryFilter);
+        Products = await _ecommerceApi.GetAllProductsOnStore(pageNumber, PAGE_SIZE, NameFilter, CategoryFilter);
 
-        products = await client.GetAsyncWrapper<PaginatedList<ProductResponse>>(
-            StoreEndpoints.GetStoreWithProductPaginated,
-            queryString: queryString);
-
-        categories = await GetCacheCategory();
+        Categories = await GetCacheCategory(OnCacheMiss);
     }
 
-    private Dictionary<string, string> GetQueryStringForPaginatedProductsRequest(
-        string PageNumber,
-        string PageSize,
-        string nameFilter,
-        string categoryFilter)
+    private async Task<string[]> OnCacheMiss()
+        => (await _ecommerceApi.GetAllCategories()).Select(c => c.Name).ToArray();
+
+    private async Task<string[]> GetCacheCategory(Func<Task<string[]>> onCacheMiss)
     {
-        return new Dictionary<string, string>()
+        if (!_cache.TryGetValue(CACHE_CATEGORIES_KEY, out string[]? categories))
         {
-            {"PageNumber", PageNumber},
-            {"PageSize", PageSize},
-            {"NameFilter", nameFilter},
-            {"CategoryFilter", categoryFilter}
-        };
-    }
+            categories = await onCacheMiss();
 
-    private async Task<string[]> GetCacheCategory()
-    {
-        if (!_cache.TryGetValue(CACHE_CATEGORIES_KEY, out string[]? cacheCategories))
-        {
-            cacheCategories = (await client.GetAsyncWrapper<ICollection<CategoryResponse>>(CategoryEndpoints.GetAllCategories))
-                            .Select(cr => cr.Name)
-                            .ToArray();
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                                        .SetSlidingExpiration(TimeSpan.FromDays(1));
-
-            _cache.Set(CACHE_CATEGORIES_KEY, cacheCategories, cacheEntryOptions);
+            CacheCategories(categories);
         }
 
-        return cacheCategories!;
+        return categories!;
+    }
+
+    private void CacheCategories(string[] categories)
+    {
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+                                        .SetSlidingExpiration(TimeSpan.FromDays(1));
+
+        _cache.Set(CACHE_CATEGORIES_KEY, categories, cacheEntryOptions);
     }
 }

@@ -1,65 +1,63 @@
-using Ecommerce.Contracts.Endpoints;
-using Ecommerce.Client.BackendClient;
-using Ecommerce.Contracts.Authentication;
+using Ecommerce.Contracts.Requests;
+using Ecommerce.Contracts.Responses;
+using Ecommerce.Client.Pages.Services;
 
-using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Ecommerce.Client.Pages.Auth;
 
 public class LoginModel : PageModel
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IEcommerceApi _ecommerceApi;
 
-    public LoginModel(IHttpClientFactory httpClientFactory)
+    public LoginModel(IEcommerceApi ecommerceApi)
     {
-        _httpClientFactory = httpClientFactory;
+        _ecommerceApi = ecommerceApi;
     }
 
     [BindProperty]
-    public LoginRequest loginRequest { get; set; } = null!;
+    public LoginRequest LoginRequest { get; set; } = null!;
 
-    public void OnGet()
-    {
-    }
+    public void OnGet() { }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        var client = _httpClientFactory.CreateClient(BackendClientConsts.CLIENT_NAME);
+        var authResponse = await _ecommerceApi.LoginUser(LoginRequest);
 
-        var response = await client.PostAsJsonAsync<LoginRequest>(AuthEndpoints.Login, loginRequest);
+        var claimsPrincipal = GetClaimsPrincipalFromToken(authResponse.AccessToken);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return Page();
-        }
-
-        var responseReaded = await response.Content.ReadAsStringAsync();
-
-        var authResponse = JsonConvert.DeserializeObject<AuthenticateResponse>(responseReaded);
-
-        var claimsPrincipal = GetClaimsPrincipal(authResponse!.AccessToken);
-
-        Response.Cookies.Append("access-token", authResponse.AccessToken);
-        Response.Cookies.Append("refresh-token", authResponse.RefreshToken);
+        SetTheTokensCookies(authResponse);
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-         return RedirectToPage("/Home/Index");
+        return RedirectToPage("/Home/Index");
     }
 
-    private ClaimsPrincipal GetClaimsPrincipal(string token)
+    private static ClaimsPrincipal GetClaimsPrincipalFromToken(string token)
+    {
+        IEnumerable<Claim> claims = GetClaimsFromToken(token);
+        ClaimsIdentity claimsIdentity = GetClaimsIdentityFromClaims(claims);
+        return new ClaimsPrincipal(claimsIdentity);
+    }
+
+    private static ClaimsIdentity GetClaimsIdentityFromClaims(IEnumerable<Claim> claims)
+        => new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+    private static IEnumerable<Claim> GetClaimsFromToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var claims = tokenHandler.ReadJwtToken(token).Claims;
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+        return claims;
+    }
 
-        return claimsPrincipal;
+    private void SetTheTokensCookies(AuthenticateResponse authResponse)
+    {
+        Response.Cookies.Append("access-token", authResponse.AccessToken);
+        Response.Cookies.Append("refresh-token", authResponse.RefreshToken);
     }
 }

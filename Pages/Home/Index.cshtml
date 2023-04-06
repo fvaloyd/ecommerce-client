@@ -1,7 +1,7 @@
 ﻿@page "/"
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Ecommerce";
 }
 
 <div class="row">
@@ -17,15 +17,15 @@
             <div class="col">
                 <form method="post" class="mb-3">
                     <div class="input-group">
-                        <input class="mb-1 form-control" placeholder="Product name" asp-for="nameFilter" />
+                        <input class="mb-1 form-control" placeholder="Product name" asp-for="NameFilter" />
                         <button type="submit" class="rounded mb-1 text-white search-btn">
                             Search
                             <img src="assets/search.svg" width="20px" height="20px" />
                         </button>
                     </div>
-                    <select class="form-select mb-1" asp-for="categoryFilter">
+                    <select class="form-select mb-1" asp-for="CategoryFilter">
                         <option value="" selected>All</option>
-                        @foreach(string category in Model.categories)
+                        @foreach(string category in Model.Categories)
                         {
                             <option value="@category">@category</option>
                         }
@@ -35,7 +35,7 @@
         </div>
 
         <div class="row">
-            @foreach (var product in Model.products.Items)
+            @foreach (var product in Model.Products.Items)
             {
             <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
                 <div class="productCard">
@@ -70,7 +70,7 @@
                                 <img class="prdPagination-svg" src="/assets/leftArrow.svg" width="40px" height="40px" />
                             </a>
                         </li>
-                        @for(int i=1; i<=Model.products.TotalPages; i++)
+                        @for(int i=1; i<=Model.Products.TotalPages; i++)
                         {
                             <li class="prdPagination-item"><a asp-page-handler="ChangePage" asp-route-pageNumber="@i">@i</a>
                             </li>
@@ -91,9 +91,9 @@
 @section scripts {
     <script>
         const DEFAULT_PAGE = 1;
-        const TOTAL_PAGES = parseInt("@Model.products.TotalPages.ToString()");
+        const TOTAL_PAGES = parseInt("@Model.Products.TotalPages.ToString()");
 
-        const pageNumber = parseInt("@Model.products.PageNumber");
+        const pageNumber = parseInt("@Model.Products.PageNumber");
 
         const paginationList = document.getElementById('pagination');
         const paginationLinks = paginationList.getElementsByTagName('a');

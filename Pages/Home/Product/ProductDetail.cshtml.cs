@@ -1,4 +1,4 @@
-using Ecommerce.Contracts.Products;
+using Ecommerce.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Ecommerce.Client.Pages.Home.Product;
