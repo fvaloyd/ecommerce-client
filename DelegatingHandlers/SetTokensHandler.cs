@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace Ecommerce.Client.BackendClient.MessageHandlers;
+namespace Ecommerce.Client.DelegatingHandlers;
 
 public class SetTokensHandler : DelegatingHandler
 {
@@ -20,9 +20,9 @@ public class SetTokensHandler : DelegatingHandler
         {
             return base.SendAsync(request, cancellationToken);
         }
-        
+
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, accessToken);
-        request.Headers.Add("refresh-token", new[] {refreshToken});
+        request.Headers.Add("refresh-token", new[] { refreshToken });
 
         return base.SendAsync(request, cancellationToken);
     }
