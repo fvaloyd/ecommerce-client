@@ -4,7 +4,7 @@ using Ecommerce.Client.Filters;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMvc(config => {
-    config.Filters.Add(typeof(BackendExceptionFilter));
+    config.Filters.Add(typeof(ApiExceptionFilter));
 });
 
 builder.Services.AddRazorPages();
