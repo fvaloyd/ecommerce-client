@@ -1,15 +1,9 @@
 using Ecommerce.Client.Extensions;
-using Ecommerce.Client.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMvc(config => {
-    config.Filters.Add(typeof(ApiExceptionFilter));
-});
-
-builder.Services.AddRazorPages();
-
-builder.Services.AddCookieAuthentication()
+builder.Services.AddWebConfiguration()
+                .AddCookieAuthentication()
                 .AddAuthorization()
                 .AddRefitConfiguration(builder.Configuration);
 
