@@ -1,7 +1,8 @@
-﻿using Refit;
-using Ecommerce.Client.Services;
+﻿using Ecommerce.Client.Services;
+using Ecommerce.Client.DelegatingHandlers;
+
+using Refit;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Ecommerce.Client.BackendClient.MessageHandlers;
 
 namespace Ecommerce.Client.Extensions;
 

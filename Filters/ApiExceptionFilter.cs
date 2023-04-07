@@ -14,7 +14,8 @@ public class ApiExceptionFilter : IExceptionFilter
         {
             {HttpStatusCode.BadRequest, BadRequestHandle},
             {HttpStatusCode.NotFound, NotFoundHandle},
-            {HttpStatusCode.InternalServerError, InternalServerErrorHandle}
+            {HttpStatusCode.InternalServerError, InternalServerErrorHandle},
+            {HttpStatusCode.Unauthorized, UnAuthorizedHandle}
         };
     }
 
@@ -49,6 +50,12 @@ public class ApiExceptionFilter : IExceptionFilter
     private void InternalServerErrorHandle(ExceptionContext context)
     {
         context.Result = new RedirectToPageResult("/NotFound");
+        context.ExceptionHandled = true;
+    }
+    
+    private void UnAuthorizedHandle(ExceptionContext context)
+    {
+        context.Result = new RedirectToPageResult("/Auth/Login/Login");
         context.ExceptionHandled = true;
     }
 }

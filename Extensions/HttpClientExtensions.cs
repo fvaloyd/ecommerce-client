@@ -5,7 +5,7 @@ namespace Ecommerce.Client.Extensions;
 
 public static class HttpClientExtensions
 {
-    public static async Task<T> GetContentObject<T>(this HttpResponseMessage httpResponseMessage)
+    public static async Task<T> GetContentObjectAsync<T>(this HttpResponseMessage httpResponseMessage)
     {
         var content = await httpResponseMessage.Content.ReadAsStringAsync();
 
@@ -29,6 +29,6 @@ public static class HttpClientExtensions
 
         HttpResponseMessage response = await client.GetAsync(stringBuilder.ToString());
 
-        return await response.GetContentObject<T>();
+        return await response.GetContentObjectAsync<T>();
     }
 }
