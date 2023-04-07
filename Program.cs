@@ -11,8 +11,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddCookieAuthentication()
                 .AddAuthorization()
-                .AddRefitConfiguration(builder.Configuration)
-                .AddBackendHttpClient(builder.Configuration);
+                .AddRefitConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
