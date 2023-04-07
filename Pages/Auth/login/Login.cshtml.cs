@@ -1,3 +1,4 @@
+using Ecommerce.Client.Services;
 using Ecommerce.Contracts.Requests;
 using Ecommerce.Contracts.Responses;
 
@@ -7,7 +8,6 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Ecommerce.Client.Services;
 
 namespace Ecommerce.Client.Pages.Auth;
 
@@ -16,9 +16,7 @@ public class LoginModel : PageModel
     private readonly IEcommerceApi _ecommerceApi;
 
     public LoginModel(IEcommerceApi ecommerceApi)
-    {
-        _ecommerceApi = ecommerceApi;
-    }
+        => _ecommerceApi = ecommerceApi;
 
     [BindProperty]
     public LoginRequest LoginRequest { get; set; } = null!;

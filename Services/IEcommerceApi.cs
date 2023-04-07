@@ -1,7 +1,8 @@
-using Ecommerce.Client.Models;
 using Ecommerce.Contracts;
+using Ecommerce.Client.Models;
 using Ecommerce.Contracts.Requests;
 using Ecommerce.Contracts.Responses;
+
 using Refit;
 
 namespace Ecommerce.Client.Services;
