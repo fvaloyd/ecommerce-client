@@ -1,6 +1,6 @@
 ﻿using Ecommerce.Client.BackendClient;
 using Ecommerce.Client.BackendClient.MessageHandlers;
-using Ecommerce.Client.Pages.Services;
+using Ecommerce.Client.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Refit;
 

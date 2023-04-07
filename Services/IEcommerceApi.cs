@@ -4,7 +4,7 @@ using Ecommerce.Contracts.Requests;
 using Ecommerce.Contracts.Responses;
 using Refit;
 
-namespace Ecommerce.Client.Pages.Services;
+namespace Ecommerce.Client.Services;
 
 public interface IEcommerceApi
 {

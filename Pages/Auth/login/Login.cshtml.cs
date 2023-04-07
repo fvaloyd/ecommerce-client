@@ -1,6 +1,5 @@
 using Ecommerce.Contracts.Requests;
 using Ecommerce.Contracts.Responses;
-using Ecommerce.Client.Pages.Services;
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Ecommerce.Client.Services;
 
 namespace Ecommerce.Client.Pages.Auth;
 

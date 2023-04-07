@@ -1,5 +1,5 @@
 ﻿using Ecommerce.Client.Models;
-using Ecommerce.Client.Pages.Services;
+using Ecommerce.Client.Services;
 using Ecommerce.Contracts.Responses;
 
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +17,9 @@ public class IndexModel : PageModel
     private readonly IMemoryCache _cache;
     private readonly IEcommerceApi _ecommerceApi;
 
+    public IndexModel(IMemoryCache cache, IEcommerceApi ecommerceApi)
+        => (_cache, _ecommerceApi) = (cache, ecommerceApi);
+
     [BindProperty]
     public string NameFilter { get; set; } = string.Empty;
 
@@ -26,12 +29,6 @@ public class IndexModel : PageModel
     public PaginatedList<ProductResponse> Products { get; set; } = null!;
 
     public string[] Categories { get; set; } = null!;
-
-    public IndexModel(IMemoryCache cache, IEcommerceApi ecommerceApi) 
-    {
-        _cache = cache;
-        _ecommerceApi = ecommerceApi;
-    }
 
     public async Task OnGet()
     {
