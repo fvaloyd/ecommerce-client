@@ -26,29 +26,34 @@ public class IndexModel : PageModel
     [BindProperty]
     public string CategoryFilter { get; set; } = string.Empty;
 
-    public PaginatedList<ProductResponse> Products { get; set; } = null!;
+    public PaginatedList<ProductResponse> Products { get; set; } = new();
 
-    public string[] Categories { get; set; } = null!;
+    public string[] Categories { get; set; } = Array.Empty<string>();
+
+    public int[] ProductInCartIds { get; set; } = Array.Empty<int>();
 
     public async Task OnGet()
     {
-        Products = await _ecommerceApi.GetAllProductsOnStore(DEFAULT_PAGE, PAGE_SIZE, NameFilter, CategoryFilter);
-
-        Categories = await GetCacheCategory(OnCacheMiss);
+        await LoadPageData(DEFAULT_PAGE);
     }
 
     public async Task OnPostAsync()
     {
-        Products = await _ecommerceApi.GetAllProductsOnStore(DEFAULT_PAGE, PAGE_SIZE, NameFilter, CategoryFilter);
-
-        Categories = await GetCacheCategory(OnCacheMiss);
+        await LoadPageData(DEFAULT_PAGE);
     }
 
     public async Task OnGetChangePageAsync(int pageNumber)
     {
+        await LoadPageData(pageNumber);
+    }
+
+    private async Task LoadPageData(int pageNumber)
+    {
         Products = await _ecommerceApi.GetAllProductsOnStore(pageNumber, PAGE_SIZE, NameFilter, CategoryFilter);
 
         Categories = await GetCacheCategory(OnCacheMiss);
+
+        await LoadProductIdsFromCart();
     }
 
     private async Task<string[]> OnCacheMiss()
@@ -72,5 +77,24 @@ public class IndexModel : PageModel
                                         .SetSlidingExpiration(TimeSpan.FromDays(1));
 
         _cache.Set(CACHE_CATEGORIES_KEY, categories, cacheEntryOptions);
+    }
+
+    private async Task LoadProductIdsFromCart()
+    {
+        if (User.Identity is not null && User.Identity.IsAuthenticated)
+        {
+            // The fact that the user can have an empty cart forces us to ignore this exception.
+            try { ProductInCartIds = await _ecommerceApi.GetProductInBasketIds(); }
+            catch { }
+        }
+    }
+
+    public async Task<IActionResult> OnGetAddToCartAsync(int productId)
+    {
+        if (!User.Identity!.IsAuthenticated)
+            return RedirectToPage("/Auth/Login/Login");
+
+        await _ecommerceApi.AddProductToBasket(productId);
+        return RedirectToPage("/Home/Index");
     }
 }

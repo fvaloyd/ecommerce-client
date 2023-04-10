@@ -2,6 +2,7 @@
     --clr-primary-800: #193650;
     --clr-primary-900: #162f45;
     --clr-sky-400: #38bdf8;
+    --clr-sky-600: #0284c7;
     --clr-pink-400: #f472b6;
     --clr-stone-700: #686868;
     --clr-emerald-400: #34d399;
@@ -9,9 +10,7 @@
     --clr-emerald-700: #047857;
     --clr-slate-50: #f8fafc;
     --clr-slate-300: #cbd5e1;
-
     --f-color: #28282e;
-
     --br-rounded: .3rem;
 }
 

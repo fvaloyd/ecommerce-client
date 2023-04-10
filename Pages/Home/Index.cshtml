@@ -20,7 +20,7 @@
                         <input class="mb-1 form-control" placeholder="Product name" asp-for="NameFilter" />
                         <button type="submit" class="rounded mb-1 text-white search-btn">
                             Search
-                            <img src="assets/search.svg" width="20px" height="20px" />
+                            <img src="assets/search.svg" width="20" height="20" />
                         </button>
                     </div>
                     <select class="form-select mb-1" asp-for="CategoryFilter">
@@ -50,15 +50,28 @@
                             <span class="brand-badget">@product.CategoryName</span>
                             <span class="text-white py-1">@product.Price $</span>
                         </div>
-                        <button class="addToCart-btn">
-                            Add to cart
-                            <img src="assets/add.svg" class="addToCart-svg" alt="add to cart icon" width="20px"
-                                height="20px">
-                        </button>
+
+                        @if (Model.ProductInCartIds.Length > 0
+                            && Model.ProductInCartIds.Contains(product.Id))
+                        {
+                                <button onclick="GoToCart()" class="cart-btn goToCart-btn-bg">
+                                <span>Go to cart</span>
+                                <img src="assets/cart.svg" class="cart-svg" alt="Go to cart icon" width="20" height="20">
+                            </button>
+                        }
+                        else
+                        {
+                            <button onclick="AddToCart(@product.Id)" class="cart-btn addToCart-btn-bg">
+                                <span>Add to cart</span>
+                                <img src="assets/add.svg" class="cart-svg" alt="add to cart icon" width="20" height="20">
+                            </button>
+                        }
                     </div>
+
                 </div>
             </div>
             }
+
         </div>
 
         <div class="row">
@@ -67,7 +80,7 @@
                     <ul class="prdPagination-list" id="pagination">
                         <li>
                             <a href="#" id="previous">
-                                <img class="prdPagination-svg" src="/assets/leftArrow.svg" width="40px" height="40px" />
+                                <img class="prdPagination-svg" src="/assets/leftArrow.svg" width="40" height="40" />
                             </a>
                         </li>
                         @for(int i=1; i<=Model.Products.TotalPages; i++)
@@ -77,7 +90,7 @@
                         }
                         <li>
                             <a href="#" id="next">
-                                <img src="/assets/rightArrow.svg" width="40px" height="40px" />
+                                <img src="/assets/rightArrow.svg" width="40" height="40" />
                             </a>
                         </li>
                     </ul>
@@ -122,6 +135,14 @@
                 paginationLinks[i].ariaDisabled = true;
                 paginationLinks[i].parentElement.classList.add('selected');
             }
+        }
+
+        const GoToCart = () => {
+            window.location.href = "/Cart"
+        }
+
+        const AddToCart = (productId) => {
+            window.location.href = `?productId=${productId}&handler=AddToCart`;
         }
     </script>
 }

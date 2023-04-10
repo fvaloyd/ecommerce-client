@@ -69,22 +69,33 @@
     background-color: var(--clr-sky-400);
 }
 
-.addToCart-btn {
+.cart-btn {
     padding: .25rem;
     width: 100%;
-    background-color: var(--clr-emerald-600);
     color: var(--clr-slate-50);
     border: none;
     transition: all ease-in-out .3s;
 }
 
-.addToCart-svg {
+.addToCart-btn-bg {
+    background-color: var(--clr-emerald-600);
+}
+
+.goToCart-btn-bg {
+    background-color: var(--clr-sky-400);
+}
+
+.cart-svg {
     position: relative;
     top: -1px;
 }
 
-button.addToCart-btn:hover {
+button.addToCart-btn-bg:hover {
     background-color: var(--clr-emerald-700);
+}
+
+button.goToCart-btn-bg:hover {
+    background-color: var(--clr-sky-600);
 }
 
 /* Pagination */
