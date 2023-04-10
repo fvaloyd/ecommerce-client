@@ -110,6 +110,9 @@ public interface IEcommerceApi
 
     [Delete(ApiRoutes.Basket.RemoveProduct)]
     Task RemoveProductFromBasket(int productId);
+
+    [Get(ApiRoutes.Basket.GetProductIds)]
+    Task<int[]> GetProductInBasketIds();
     #endregion
 
     #region Payment
