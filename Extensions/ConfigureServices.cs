@@ -29,7 +29,7 @@ public static class ConfigureServices
             config.Cookie.Name = "CookieAuth";
             config.Cookie.HttpOnly = true;
             config.Cookie.SameSite = SameSiteMode.Strict;
-            config.ExpireTimeSpan = TimeSpan.FromDays(1);
+            config.ExpireTimeSpan = TimeSpan.FromHours(3);
 
             config.AccessDeniedPath = "/Auth/AccessDenied";
             config.LoginPath = "/Auth/Login";
