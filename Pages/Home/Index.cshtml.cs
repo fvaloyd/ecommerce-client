@@ -83,8 +83,8 @@ public class IndexModel : PageModel
     {
         if (User.Identity is not null && User.Identity.IsAuthenticated)
         {
-            // The fact that the user can have an empty cart forces us to ignore this exception.
-            try { ProductInCartIds = await _ecommerceApi.GetProductInBasketIds(); }
+            // The fact that the user can have an empty cart forces us to ignore this ApiException.
+            try { ProductInCartIds = await _ecommerceApi.GetProductIdsInBasket(); }
             catch { }
         }
     }
