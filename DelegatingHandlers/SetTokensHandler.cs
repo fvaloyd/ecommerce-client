@@ -5,24 +5,24 @@ namespace Ecommerce.Client.DelegatingHandlers;
 
 public class SetTokensHandler : DelegatingHandler
 {
-    private readonly IHttpContextAccessor _contextAccessor;
+    readonly IHttpContextAccessor _contextAccessor;
 
     public SetTokensHandler(IHttpContextAccessor contextAccessor)
         => _contextAccessor = contextAccessor;
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var (accessToken, refreshToken) = GetTokensFromCurrentRequestCookies();
+        var (accessToken, refreshToken) = GetTokensFromCurrentClientRequestCookies();
 
-        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+        if (IsNullOrEmptyTokens(accessToken, refreshToken))
             return base.SendAsync(request, cancellationToken);
 
-        SetTokensForTheCurrentRequest(request, accessToken, refreshToken);
+        SetTokensForTheNextRequest(request, accessToken!, refreshToken!);
 
         return base.SendAsync(request, cancellationToken);
     }
 
-    (string? accessToken, string? refreshToken) GetTokensFromCurrentRequestCookies()
+    (string? accessToken, string? refreshToken) GetTokensFromCurrentClientRequestCookies()
     {
         var accessToken = _contextAccessor.HttpContext!.Request.Cookies["access-token"];
         var refreshToken = _contextAccessor.HttpContext.Request.Cookies["refresh-token"];
@@ -30,7 +30,10 @@ public class SetTokensHandler : DelegatingHandler
         return (accessToken, refreshToken);
     }
 
-    static void SetTokensForTheCurrentRequest(HttpRequestMessage request, string accessToken, string refreshToken)
+    static bool IsNullOrEmptyTokens(string? accessToken, string? refreshToken)
+        => string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken);
+
+    static void SetTokensForTheNextRequest(HttpRequestMessage request, string accessToken, string refreshToken)
     {
         request.Headers.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, accessToken);
         request.Headers.Add("refresh-token", new[] { refreshToken });
